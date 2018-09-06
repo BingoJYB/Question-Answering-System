@@ -1,8 +1,7 @@
 import math
 
-from gensim import corpora, models, similarities
+from gensim import corpora, models
 from operator import itemgetter
-from nltk.tag import pos_tag
 
 class Analyzer(object):
 
@@ -15,23 +14,18 @@ class Analyzer(object):
         tfidf = models.TfidfModel(corpus)
         corpus_tfidf = tfidf[corpus]
         for doc in corpus_tfidf:
-            texts_with_tfidf.append(sorted(doc, key=itemgetter(1), reverse=True)[:10])
+            texts_with_tfidf.append(doc)
+            
+        dictionary = {y : x for x, y in dictionary.token2id.items()}
+        return texts_with_tfidf, dictionary
 
-        return texts_with_tfidf
-
-    def calculate_tag(self, texts):
-
-        texts_with_tag = []
-
-        for text in texts:
-            texts_with_tag.append(pos_tag(text))
-
-        return texts_with_tag
-
-    def get_cosine(self, vec1, vec2):
+    def get_cosine(self, vec1, vec2, vec_tfidf):
 
         intersection = set(vec1.keys()) & set(vec2.keys())
-        numerator = sum([vec1[x] * vec2[x] for x in intersection])
+        try:
+            numerator = sum([vec1[x] * vec2[x] * vec_tfidf[x] for x in intersection])
+        except:
+            numerator = sum([vec1[x] * vec2[x] for x in intersection])
 
         sum1 = sum([vec1[x]**2 for x in vec1.keys()])
         sum2 = sum([vec2[x]**2 for x in vec2.keys()])

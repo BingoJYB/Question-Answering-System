@@ -17,12 +17,19 @@ class AQprocessor(object):
             text_segmented = self.preprocessor.text_segmentation(text_lowercase)
             text_stopword_removal = self.preprocessor.stopword_removal(text_segmented)
             text_lemmatized = self.preprocessor.lemmatization(text_stopword_removal)
-            texts.append(text_stopword_removal)
             texts_lemmatized.append(text_lemmatized)
 
-        # texts_tag = self.analyzer.calculate_tag(texts)
-        # texts_tfidf = self.analyzer.calculate_tfidf(texts_lemmatized)
-        return texts_lemmatized
+        texts_tfidf, dictionary = self.analyzer.calculate_tfidf(texts_lemmatized)
+        texts_tfidf = [dict(text) for text in texts_tfidf]
+        for text in texts_tfidf:
+            temp = {}
+            
+            for id, val in text.items():
+                temp[dictionary[id]] = val
+                
+            texts.append(temp)
+        
+        return texts_lemmatized, texts, dictionary
 
     def process_question(self, question):
         text_lowercase = self.preprocessor.text_lowercase(question)
