@@ -18,3 +18,11 @@ answers = {
         "step 6": "Make Huevos Rancheros. This easy breakfast dish is a bit like an open burrito. To make it, top 2-3 corn tortillas with black beans, avocado, tomato, cheese, and salsa, plus any other taco ingredients you enjoy. Top each tortilla creation with a fried egg and enjoy. Fried eggs also go well on potato or sweet potato hashes, so try potatoes for base instead of tortillas."
         }
     }
+
+noun = ['NN', 'NNS', 'NNP', 'NNPS']
+
+adj = ['JJ', 'JJR', 'JJS']
+
+templates = {
+    "how much": adj
+}

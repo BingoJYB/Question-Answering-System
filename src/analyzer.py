@@ -1,7 +1,7 @@
 import math
 
 from gensim import corpora, models
-from operator import itemgetter
+from nltk.tag import pos_tag
 
 class Analyzer(object):
 
@@ -18,6 +18,15 @@ class Analyzer(object):
             
         dictionary = {y : x for x, y in dictionary.token2id.items()}
         return texts_with_tfidf, dictionary
+
+    def get_tag(self, texts):
+
+        texts_tag = []
+
+        for text in texts:
+            texts_tag.append(pos_tag(text))
+
+        return texts_tag
 
     def get_cosine(self, vec1, vec2, vec_tfidf):
 
