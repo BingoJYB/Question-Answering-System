@@ -3,21 +3,22 @@ import math
 from gensim import corpora, models
 from nltk.tag import pos_tag
 
+
 class Analyzer(object):
 
     def calculate_tfidf(self, texts):
 
-        texts_with_tfidf = []
+        texts_tfidf = []
 
         dictionary = corpora.Dictionary(texts)
         corpus = [dictionary.doc2bow(text) for text in texts]
         tfidf = models.TfidfModel(corpus)
         corpus_tfidf = tfidf[corpus]
         for doc in corpus_tfidf:
-            texts_with_tfidf.append(doc)
-            
-        dictionary = {y : x for x, y in dictionary.token2id.items()}
-        return texts_with_tfidf, dictionary
+            texts_tfidf.append(doc)
+
+        dictionary = {id: word for word, id in dictionary.token2id.items()}
+        return texts_tfidf, dictionary
 
     def get_tag(self, texts):
 
@@ -36,8 +37,8 @@ class Analyzer(object):
         except:
             numerator = sum([vec1[x] * vec2[x] for x in intersection])
 
-        sum1 = sum([vec1[x]**2 for x in vec1.keys()])
-        sum2 = sum([vec2[x]**2 for x in vec2.keys()])
+        sum1 = sum([vec1[x] ** 2 for x in vec1.keys()])
+        sum2 = sum([vec2[x] ** 2 for x in vec2.keys()])
         denominator = math.sqrt(sum1) * math.sqrt(sum2)
 
         if not denominator:
