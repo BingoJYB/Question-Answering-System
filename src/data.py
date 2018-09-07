@@ -25,9 +25,9 @@ num = ['CD']
 verb = ['VB']
 
 templates = {
-    "how much": adj,
+    "how much": adj + num,
     "what kind": adj,
     "what": noun,
-    "how long": noun + num,
+    "how long": adj + num,
     "when": verb
 }
