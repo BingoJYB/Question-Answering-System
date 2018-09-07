@@ -19,10 +19,15 @@ answers = {
         }
     }
 
-noun = ['NN', 'NNS', 'NNP', 'NNPS']
-
-adj = ['JJ', 'JJR', 'JJS']
+noun = ['NN', 'NNS']
+adj = ['JJ']
+num = ['CD']
+verb = ['VB']
 
 templates = {
-    "how much": adj
+    "how much": adj,
+    "what kind": adj,
+    "what": noun,
+    "how long": noun + num,
+    "when": verb
 }

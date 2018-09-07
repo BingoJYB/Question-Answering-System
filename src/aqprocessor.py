@@ -21,7 +21,7 @@ class AQprocessor(object):
             text_segmented = self.preprocessor.text_segmentation(text_lowercase)
             text_stopword_removal = self.preprocessor.stopword_removal(text_segmented)
             text_lemmatized = self.preprocessor.lemmatization(text_stopword_removal)
-            texts_tag.append(text_stopword_removal)
+            texts_tag.append(text_segmented)
             texts_lemmatized.append(text_lemmatized)
 
         texts_tag = self.analyzer.get_tag(texts_tag)
@@ -38,17 +38,17 @@ class AQprocessor(object):
         return texts_lemmatized, texts_tag, vec_tfidf
 
     def process_question(self, question):
-        text_lowercase = self.preprocessor.text_lowercase(question)
-        text_segmented = self.preprocessor.text_segmentation(text_lowercase)
-        text_stopword_removal = self.preprocessor.stopword_removal(text_segmented)
-        text_lemmatized = self.preprocessor.lemmatization(text_stopword_removal)
+        question_lowercase = self.preprocessor.text_lowercase(question)
+        question_segmented = self.preprocessor.text_segmentation(question_lowercase)
+        question_stopword_removal = self.preprocessor.stopword_removal(question_segmented)
+        question_lemmatized = self.preprocessor.lemmatization(question_stopword_removal)
 
-        return text_lemmatized
+        return question_lemmatized, question_segmented
 
     def select_best_candidates(self, candidates, question, question_tag, texts_tag):
 
         question = self.preprocessor.text_lowercase(question)
-        best_candidates = []
+        best_candidates = set()
 
         for key, val in templates.items():
             if key in question:
@@ -59,9 +59,13 @@ class AQprocessor(object):
                         if qtag[1] in noun:
                             for id, ttag in enumerate(text_tag):
                                 if ttag[0] == qtag[0]:
-                                    for tp in text_tag[id-2:id] + text_tag[id+1:id+3]:
+                                    if id > 2:
+                                        combined = text_tag[id-3:id] + text_tag[id+1:id+3]
+                                    else:
+                                        combined = text_tag[:id] + text_tag[id+1:id+3]
+                                    for tp in combined:
                                         if tp[1] in val:
-                                            best_candidates.append(candidate)
+                                            best_candidates.add(candidate)
 
                 break
 

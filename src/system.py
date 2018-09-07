@@ -14,11 +14,11 @@ for methodID, steps in answers.items():
 
 while True:
     question = input('I: ')
-    question_processed = aqprocessor.process_question(question)
-    question_tag = analyzer.get_tag([question_processed])
+    question_lemmatized, question_segmented = aqprocessor.process_question(question)
+    question_tag = analyzer.get_tag([question_segmented])
 
     for methodID, tuples in answer_tuples.items():
-        vec1 = Counter(question_processed)
+        vec1 = Counter(question_lemmatized)
         candidates[methodID] = []
 
         for id, text in enumerate(tuples[0]):
