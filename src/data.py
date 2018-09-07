@@ -21,11 +21,11 @@ answers = {
 
 noun = ['NN', 'NNS']
 adj = ['JJ']
-num = ['CD']
+num = ['DT', 'CD']
 verb = ['VB']
 
 templates = {
-    "how much": adj + num,
+    "how much": num,
     "what kind": adj,
     "what": noun,
     "how long": adj + num,
