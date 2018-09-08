@@ -7,14 +7,16 @@ from preprocessor import Preprocessor
 class AQprocessor(object):
 
     def __init__(self, answers):
+        
         self.answers = answers
         self.analyzer = Analyzer()
         self.preprocessor = Preprocessor()
 
+    # process the answer to get lemmatized words, part of speech, term frequency-inverse document frequency
     def process_answer(self, steps):
-        texts_word_tfidf = []
-        texts_tag = []
-        texts_lemmatized = []
+        
+        texts_tag = []              # list of (word, part of speech) tuples
+        texts_lemmatized = []       # list of lemmatized words
 
         for stepID, step in steps.items():
             text_lowercase = self.preprocessor.text_lowercase(step)
@@ -29,7 +31,9 @@ class AQprocessor(object):
 
         return texts_lemmatized, texts_tag, texts_word_tfidf
 
+    # process the question to get lemmatized question, part of speech
     def process_question(self, question):
+        
         question_lowercase = self.preprocessor.text_lowercase(question)
         question_segmented = self.preprocessor.text_segmentation(question_lowercase)
         question_stopword_removed = self.preprocessor.stopword_removal(question_segmented)
@@ -38,6 +42,7 @@ class AQprocessor(object):
 
         return question_lemmatized, question_tag
 
+    # select best candidates from candidates
     def select_best_candidates(self, answer, question):
 
         candidates = []

@@ -4,6 +4,7 @@ from data import answers
 aqprocessor = AQprocessor(answers)
 candidates = {}
 
+# process answers
 for methodID, steps in answers.items():
     texts_lemmatized, texts_tag, texts_word_tfidf = aqprocessor.process_answer(steps)
     answers[methodID] = (texts_lemmatized, texts_tag, texts_word_tfidf)
