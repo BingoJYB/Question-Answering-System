@@ -5,8 +5,8 @@ aqprocessor = AQprocessor(answers)
 candidates = {}
 
 for methodID, steps in answers.items():
-    texts_lemmatized, texts_tag, texts_word_tag = aqprocessor.process_answer(steps)
-    answers[methodID] = (texts_lemmatized, texts_tag, texts_word_tag)
+    texts_lemmatized, texts_tag, texts_word_tfidf = aqprocessor.process_answer(steps)
+    answers[methodID] = (texts_lemmatized, texts_tag, texts_word_tfidf)
 
 while True:
     question = input('Q: ')

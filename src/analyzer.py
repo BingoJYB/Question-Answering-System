@@ -2,13 +2,18 @@ import math
 
 from gensim import corpora, models
 from nltk.tag import pos_tag
+from preprocessor import Preprocessor
 
 
 class Analyzer(object):
+    
+    def __init__(self):
+        self.preprocessor = Preprocessor()
 
     def calculate_tfidf(self, texts):
 
         texts_tfidf = []
+        texts_word_tfidf = []
 
         dictionary = corpora.Dictionary(texts)
         corpus = [dictionary.doc2bow(text) for text in texts]
@@ -17,15 +22,28 @@ class Analyzer(object):
         for doc in corpus_tfidf:
             texts_tfidf.append(doc)
 
+        texts_tfidf = map(dict, texts_tfidf)
         dictionary = {id: word for word, id in dictionary.token2id.items()}
-        return texts_tfidf, dictionary
+
+        for text in texts_tfidf:
+            temp = {}
+
+            for id, tfidf in text.items():
+                temp[dictionary[id]] = tfidf
+
+            texts_word_tfidf.append(temp)
+        
+        return texts_word_tfidf
 
     def get_tag(self, texts):
 
         texts_tag = []
 
         for text in texts:
-            texts_tag.append(pos_tag(text))
+            words, tags = zip(*pos_tag(text))
+            words_lemmatized = self.preprocessor.lemmatization(words)
+            text_tag = zip(words_lemmatized, tags)
+            texts_tag.append(list(text_tag))
 
         return texts_tag
 

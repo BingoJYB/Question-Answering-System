@@ -1,6 +1,5 @@
 from analyzer import Analyzer
 from collections import Counter
-from data import noun
 from data import templates
 from preprocessor import Preprocessor
 
@@ -26,16 +25,7 @@ class AQprocessor(object):
             texts_lemmatized.append(text_lemmatized)
 
         texts_tag = self.analyzer.get_tag(texts_tag)
-        texts_tfidf, dictionary = self.analyzer.calculate_tfidf(texts_lemmatized)
-        texts_tfidf = [dict(text) for text in texts_tfidf]
-
-        for text in texts_tfidf:
-            temp = {}
-
-            for id, tfidf in text.items():
-                temp[dictionary[id]] = tfidf
-
-            texts_word_tfidf.append(temp)
+        texts_word_tfidf = self.analyzer.calculate_tfidf(texts_lemmatized)
 
         return texts_lemmatized, texts_tag, texts_word_tfidf
 
@@ -50,10 +40,9 @@ class AQprocessor(object):
 
     def select_best_candidates(self, answer, question):
 
-        original_question = self.preprocessor.text_lowercase(question[0])
-        question_vec = Counter(question[1])
         candidates = []
         best_candidates = set()
+        question_vec = Counter(question[1])
 
         for id, text in enumerate(answer[0]):
             candidate_vec = Counter(text)
@@ -63,21 +52,21 @@ class AQprocessor(object):
         candidates = sorted([(val, id) for id, val in enumerate(candidates)],
                             reverse=True)[:3]
 
-        for key, val in templates.items():
-            if key in original_question:
+        for key, tuple in templates.items():
+            if key in question[0].lower():
                 for candidate in candidates:
                     text_tag = answer[1][candidate[1]]
 
                     for qtag in question[2][0]:
-                        if qtag[1] in noun:
+                        if qtag[1] in ['NN', 'NNS']:
                             for id, ttag in enumerate(text_tag):
                                 if ttag[0] == qtag[0]:
                                     if id > 2:
-                                        combined = text_tag[id - 3:id] + text_tag[id + 1:id + 3]
+                                        combined = text_tag[id-3:id] + text_tag[id+1:id+4]
                                     else:
-                                        combined = text_tag[:id] + text_tag[id + 1:id + 3]
+                                        combined = text_tag[:id] + text_tag[id+1:id+4]
                                     for tp in combined:
-                                        if tp[1] in val:
+                                        if tp[0] in tuple['keyword'] or tp[1] in tuple['tag']:
                                             best_candidates.add(candidate)
 
                 break

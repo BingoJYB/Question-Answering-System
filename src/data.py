@@ -19,15 +19,25 @@ answers = {
     }
 }
 
-noun = ['NN', 'NNS']
-adj = ['JJ']
-num = ['DT', 'CD']
-verb = ['VB']
-
 templates = {
-    "how much": num,
-    "what kind": adj,
-    "what": noun,
-    "how long": adj + num,
-    "when": verb
+    "how much": {
+        "keyword": ['some', 'little', 'much', 'many', 'plenty'],
+        "tag": ['CD']
+        },
+    "what kind": {
+        "keyword": [],
+        "tag": ['JJ']
+        },
+    "what": {
+        "keyword": [],
+        "tag": ['NN', 'NNS']
+        },
+    "how long": {
+        "keyword": ['spend', 'take', 'cost'],
+        "tag": ['CD']
+        },
+    "when": {
+        "keyword": [],
+        "tag": ['CD']
+        }
 }
